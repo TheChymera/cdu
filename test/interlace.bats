@@ -43,13 +43,36 @@ page_text() {
     [ "$(page_text 4)" = "B2" ]
 }
 
-@test "works when A has more pages than B" {
+@test "interlace with -r reverses order of document B pages" {
+    run "$SCRIPT" interlace -r "$TMPDIR/a.pdf" "$TMPDIR/b.pdf" "$OUT"
+    [ "$status" -eq 0 ]
+    [ "$(page_text 1)" = "A1" ]
+    [ "$(page_text 2)" = "B2" ]
+    [ "$(page_text 3)" = "A2" ]
+    [ "$(page_text 4)" = "B1" ]
+}
+
+@test "works when document A has more pages than document B" {
     make_pdf "$TMPDIR/a.pdf" "A1" "A2" "A3"
     run "$SCRIPT" interlace "$TMPDIR/a.pdf" "$TMPDIR/b.pdf" "$OUT"
     [ "$status" -eq 0 ]
     pages=$(pdfinfo "$OUT" | awk '/^Pages:/ {print $2}')
     [ "$pages" -eq 5 ]
     [ "$(page_text 5)" = "A3" ]
+}
+
+@test "works with -r when document B has more pages than document A" {
+    make_pdf "$TMPDIR/b.pdf" "B1" "B2" "B3"
+    run "$SCRIPT" interlace -r "$TMPDIR/a.pdf" "$TMPDIR/b.pdf" "$OUT"
+    [ "$status" -eq 0 ]
+    pages=$(pdfinfo "$OUT" | awk '/^Pages:/ {print $2}')
+    [ "$pages" -eq 5 ]
+
+    [ "$(page_text 1)" = "A1" ]
+    [ "$(page_text 2)" = "B3" ]
+    [ "$(page_text 3)" = "A2" ]
+    [ "$(page_text 4)" = "B2" ]
+    [ "$(page_text 5)" = "B1" ]
 }
 
 @test "fails gracefully with missing input file" {
