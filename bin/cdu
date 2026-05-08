@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+COMMANDS_DIR="$(dirname "$0")/commands"
+COMMAND="${1:-}"
+
+if [[ -z "$COMMAND" ]]; then
+    echo "Usage: pdftools <command> [args...]"
+    echo ""
+    echo "Available commands:"
+    ls "$COMMANDS_DIR" | sed 's/\.sh$//'
+    exit 1
+fi
+
+shift
+
+CMD_SCRIPT="$COMMANDS_DIR/$COMMAND.sh"
+
+if [[ ! -f "$CMD_SCRIPT" ]]; then
+    echo "Unknown command: $COMMAND"
+    exit 1
+fi
+
+exec "$CMD_SCRIPT" "$@"
