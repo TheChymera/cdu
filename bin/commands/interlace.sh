@@ -6,7 +6,8 @@ usage() {
 Usage: $(basename "$0") [-r] <pdfA> <pdfB> <output.pdf>
    or: $(basename "$0") [-h|--help]
 
-Interlaces two PDF files page by page (A then B).
+Interlaces two PDF files page by page (A then B), with B optionally reversed.
+Unequal document page counts are handled by appending pages from longer document sequentially at the end.
 
 Options:
   -r, --reverse-b    Reverse the page order of the second PDF (B).
@@ -14,14 +15,9 @@ Options:
 
   -h, --help         Show this help message and exit.
 
-Behavior:
-  * Pages are always taken A then B in each round.
-  * If one file has more pages, the remaining pages are appended at the end.
-  * Works with unequal page counts.
-
 Examples:
   $(basename "$0") fileA.pdf fileB.pdf merged.pdf
-  $(basename "$0") -r fileA.pdf fileB.pdf merged.pdf
+  $(basename "$0") -r fileA.pdf fileB.pdf reverse_merged.pdf
 EOF
 }
 
