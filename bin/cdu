@@ -5,7 +5,7 @@ COMMANDS_DIR="$(dirname "$0")/commands"
 COMMAND="${1:-}"
 
 if [[ -z "$COMMAND" ]]; then
-    echo "Usage: pdftools <command> [args...]"
+    echo "Usage: cdu <command> [args...]"
     echo ""
     echo "Available commands:"
     ls "$COMMANDS_DIR" | sed 's/\.sh$//'
